@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState } from "react";
 import HoroscopePicker from "../Components/HoroscopePicker";
-// import DateComponent from "../Components/DateComponent";
+import DateComponent from "../Components/DateComponent";
 import horoscopeData from "../Data/Data";
 
 function Home() {
@@ -16,34 +16,32 @@ function Home() {
 
   const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
-  function getCurrentZodiacSign() {
+  function getCurrentZodiacSign(todayDate) {
     // Find the matching zodiac sign
     const currentZodiacSign = data.find((horoscope) => {
-      console.log(horoscope, "horoscope");
-      const startDateParts = horoscope.startDate.split("-");
-      const endDateParts = horoscope.endDate.split("-");
-      const startMonth = parseInt(startDateParts[0], 10);
-      const startDay = parseInt(startDateParts[1], 10);
-      const endMonth = parseInt(endDateParts[0], 10);
-      const endDay = parseInt(endDateParts[1], 10);
+      const dateRange = horoscope.dateRange.split("-")
+      console.log(dateRange, "dateRange");
 
-      const currentDateParts = formattedDate.split("/");
-      const currentMonth = parseInt(currentDateParts[0], 10);
-      const currentDay = parseInt(currentDateParts[1], 10);
-
-      if (
-        (currentMonth === startMonth && currentDay >= startDay) ||
-        (currentMonth === endMonth && currentDay <= endDay)
-      ) {
+      const currentDate = new Date(todayDate).toLocaleDateString('en-us');
+      const startDate = new Date(dateRange[0]).toLocaleDateString('en-us');
+      const endDate = new Date(dateRange[1]).toLocaleDateString('en-us');
+      console.log(endDate, currentDate, startDate.split().pop().toString(), "endDate");
+  
+      if (currentDate >= startDate && currentDate <= endDate) {
         return true;
       }
-
+  
       return false;
     });
-
+  
     return currentZodiacSign ? currentZodiacSign.sign : "Unknown";
   }
-  console.log(currentZodiacSign, "currentZodiacSign");
+  
+  // Example usage with today's date from the horoscopeData
+  const todayDate = horoscopeData.horoscopes.date;
+  // const currentZodiacSign1 = getCurrentZodiacSign(todayDate);
+  // console.log(currentZodiacSign1, "currentZodiacSign");
+  
 
   function startClickHandler() {
     setShowStartButton(!showStartButton);
@@ -51,7 +49,7 @@ function Home() {
 
   function showDateHandler() {
     setShowDate(!showDate);
-    setCurrentZodiacSign(getCurrentZodiacSign());
+    setCurrentZodiacSign(getCurrentZodiacSign(todayDate));
   }
 
   function showHoroscopeHandler() {
@@ -74,7 +72,7 @@ function Home() {
         <div>
           <div>
             <h1 onClick={(index)=> showDateHandler(index)}>Learn about your horoscope!</h1>
-            {/* <div className="button" onClick={showDateHandler}>
+            <div className="button" onClick={showDateHandler}>
               {showDate
                 ? "Click here to hide today's date!"
                 : "Click here to see today's date!"}
@@ -85,7 +83,7 @@ function Home() {
                 currentZodiacSign={currentZodiacSign}
                 data={data}
               />
-            ) : null} */}
+            ) : null}
           </div>
           <div>
             <h3>Would you like to choose an astrological sign?</h3>

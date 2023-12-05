@@ -4,7 +4,7 @@ function DateComponent({ formattedDate, currentZodiacSign }) {
   return (
     <div className="DateComponent">
       <p>{formattedDate}</p>
-      <img alt="" src={currentZodiacSign} />
+      <p> The current Zodiac Sign is: {currentZodiacSign}</p>
     </div>
   );
 }
