@@ -3,6 +3,7 @@ import { useState } from "react";
 import HoroscopePicker from "../Components/HoroscopePicker";
 import DateComponent from "../Components/DateComponent";
 import horoscopeData from "../Data/Data";
+import "bootstrap/dist/css/bootstrap.css";
 
 function Home() {
   const [showStartButton, setShowStartButton] = useState(false);
@@ -15,33 +16,47 @@ function Home() {
   const [sorryToHearMessage, setSorryToHearMessage] = useState(false);
 
   const formattedDate = currentDate.toLocaleDateString("en-US", options);
+  const [formData, setFormData] = useState({ birthDate: "" });
+  const [personalSign, setPersonalSign] = useState("");
 
-  function getCurrentZodiacSign(todayDate) {
-    // Find the matching zodiac sign
-    const currentZodiacSign = data.find((horoscope) => {
-      const dateRange = horoscope.dateRange.split("-")
-      console.log(dateRange, "dateRange");
+  // Update the state when input values change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-      const currentDate = new Date(todayDate).toLocaleDateString('en-us');
-      const startDate = new Date(dateRange[0]).toLocaleDateString('en-us');
-      const endDate = new Date(dateRange[1]).toLocaleDateString('en-us');
-      console.log(endDate, currentDate, startDate.split().pop().toString(), "endDate");
-  
-      if (currentDate >= startDate && currentDate <= endDate) {
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let userDate = new Date(formData.birthDate);
+    console.log(userDate, "userDate");
+    let sign = findZodiacSign(userDate);
+    console.log(sign, "sign");
+    setPersonalSign(sign);
+    // You can perform additional actions with the form data here
+    console.log("Form submitted:", formData, sign);
+  };
+
+  function findZodiacSign(date) {
+    const currentZodiacSign = data.find((sign) => {
+      const dateRange = sign.dateRange.split("-");
+      const startDate = new Date(
+        dateRange[0] + " " + currentDate.getFullYear()
+      );
+      // const newTodayDate = new Date(date);
+      const endDate = new Date(dateRange[1] + " " + currentDate.getFullYear());
+
+      if (date >= startDate && date <= endDate) {
         return true;
       }
-  
       return false;
     });
-  
-    return currentZodiacSign ? currentZodiacSign.sign : "Unknown";
+    return currentZodiacSign.sign;
   }
-  
   // Example usage with today's date from the horoscopeData
   const todayDate = horoscopeData.horoscopes.date;
-  // const currentZodiacSign1 = getCurrentZodiacSign(todayDate);
+  // const currentZodiacSign1 = findZodiacSign(todayDate);
   // console.log(currentZodiacSign1, "currentZodiacSign");
-  
 
   function startClickHandler() {
     setShowStartButton(!showStartButton);
@@ -49,7 +64,7 @@ function Home() {
 
   function showDateHandler() {
     setShowDate(!showDate);
-    setCurrentZodiacSign(getCurrentZodiacSign(todayDate));
+    setCurrentZodiacSign(findZodiacSign(todayDate));
   }
 
   function showHoroscopeHandler() {
@@ -64,14 +79,33 @@ function Home() {
 
   return (
     <div className="Home">
-      
       <button onClick={startClickHandler}>
         {showStartButton ? "Hide" : "Start"}
       </button>
       {showStartButton ? (
         <div>
           <div>
-            <h1 onClick={(index)=> showDateHandler(index)}>Learn about your horoscope!</h1>
+            <h1 onClick={(index) => showDateHandler(index)}>
+              Learn about your horoscope!
+            </h1>
+            <div className="form-wrapper">
+              <form onSubmit={handleSubmit}>
+                <label>What is your birthday?</label>
+                <input
+                  type="date"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleInputChange}
+                ></input>
+                <button type="submit">Submit</button>
+                {personalSign ? (
+                  <div>
+                    <p>Your sign is: {personalSign}</p>
+                  </div>
+                ) : null}
+              </form>
+            </div>
+
             <div className="button" onClick={showDateHandler}>
               {showDate
                 ? "Click here to hide today's date!"
@@ -134,7 +168,7 @@ import horoscopeData from "../Data/Data";
 
   const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
-  function getCurrentZodiacSign() {
+  function findZodiacSign() {
     // Find the matching zodiac sign
     const currentZodiacSign = data.find((horoscope) => {
       console.log(horoscope, "horoscope");
@@ -165,7 +199,7 @@ import horoscopeData from "../Data/Data";
 
   function showDateHandler() {
     setShowDate(!showDate);
-    setCurrentZodiacSign(getCurrentZodiacSign());
+    setCurrentZodiacSign(findZodiacSign());
   }
 
   function showHoroscopeHandler() {

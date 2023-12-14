@@ -53,3 +53,23 @@
   width: 30%;
   margin: 3em auto;
 }
+
+form{
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  margin: 2em auto;
+  justify-content: center;
+  align-items: center;
+  background-color: lightblue;
+  padding: 2em;
+}
+
+form label, form input{
+  margin-bottom: 2em;
+}
+
+form button{
+  width: 30%;
+  margin-bottom: 2em;
+}
