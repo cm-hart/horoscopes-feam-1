@@ -38,6 +38,7 @@ function Home() {
   };
 
   function findZodiacSign(date) {
+    console.log("Form submitted:", formData, sign);
     const currentZodiacSign = data.find((sign) => {
       const dateRange = sign.dateRange.split("-");
       const startDate = new Date(
@@ -51,7 +52,8 @@ function Home() {
       }
       return false;
     });
-    return currentZodiacSign.sign;
+    console.log(currentZodiacSign, "CZS")
+    return currentZodiacSign;
   }
   // Example usage with today's date from the horoscopeData
   const todayDate = horoscopeData.horoscopes.date;
